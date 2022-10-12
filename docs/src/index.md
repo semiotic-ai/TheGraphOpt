@@ -7,7 +7,7 @@ CurrentModule = TheGraphOpt
 This package implements optimisation algorithms for use within simulation and production.
 For the most part, your workflow should look something like
 
-```jldoctest
+```julia
 julia> using TheGraphOpt
 julia> f(x) = sum(x .^ 2)  # Specify function to optimise as min f(x)
 julia> a = GradientDescent(; x=[100.0, 50.0], η=1e-1, ϵ=1e-6)  # Specify parameters for optimisation
