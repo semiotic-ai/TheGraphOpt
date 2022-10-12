@@ -2,10 +2,30 @@
 # SPDX-License-Identifier: Apache-2.0
 
 @testset "gradientdescent" begin
-    g = GradientDescent(x=[100.0, 50.0], η=1e-1)
+    makegd() = GradientDescent(; x=[100.0, 50.0], η=1e-1, ϵ=1.0)
+    distfromzero(n) = norm([0.0, 0.0] - x(n))
+    f(x) = sum(x .^ 2)
     @testset "iteration" begin
-        f(x) = sum(x .^ 2)
-        n = iteration(f, g)
-        @test x(n) == [80.0, 40.0]
+        g = makegd()
+        z = TheGraphOpt.iteration(f, g)
+        @test z == [80.0, 40.0]
+    end
+
+    @testset "minimize" begin
+        glarge = GradientDescent(; x=[100.0, 50.0], η=1e-1, ϵ=2.0)
+        gsmall = makegd()
+        nlarge = minimize(f, glarge)
+        nsmall = minimize(f, gsmall)
+        @test x(gsmall) != x(nsmall)  # Check has not mutated
+        @test distfromzero(nlarge) > distfromzero(nsmall)  # Check that as ϵ→0, solution approaches 0
+    end
+
+    @testset "minimize!" begin
+        glarge = GradientDescent(; x=[100.0, 50.0], η=1e-1, ϵ=2.0)
+        gsmall = makegd()
+        nlarge = minimize!(f, glarge)
+        nsmall = minimize!(f, gsmall)
+        @test x(gsmall) == x(nsmall)  # Check has mutated
+        @test distfromzero(nlarge) > distfromzero(nsmall)  # Check that as ϵ→0, solution approaches 0
     end
 end

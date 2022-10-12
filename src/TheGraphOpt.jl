@@ -1,10 +1,10 @@
 module TheGraphOpt
 
 using Accessors
+using LinearAlgebra
 using Zygote
 
-import Base
-
+include("core.jl")
 include("gradientdescent.jl")
 
 end

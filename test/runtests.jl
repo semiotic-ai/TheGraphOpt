@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 using TheGraphOpt
+using LinearAlgebra
 using Test
 
 for f in readlines(joinpath(@__DIR__, "testgroups"))
