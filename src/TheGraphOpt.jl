@@ -1,5 +1,10 @@
 module TheGraphOpt
 
-# Write your package code here.
+using Accessors
+using Zygote
+
+import Base
+
+include("gradientdescent.jl")
 
 end
