@@ -11,10 +11,18 @@ Say,
 julia> f(x) = sum(x .^ 2)
 ```
 
+Then you want to create a [Hook](@ref hooks) with the [`TheGraphOpt.IsStoppingCondition`](@ref) trait.
+Else, optimisation will get stuck in an infinite loop.
+
+```julia
+julia> using LinearAlgebra
+julia> h = StopWhen((a; locals...) -> norm(x(a) - locals[:z]) < ϵ(a))  # Stop when the residual is less than the tolerance
+```
+
 Then, you want to choose the algorithm you want to use for minimisation and specify its parameters.
 
 ```julia
-julia> a = GradientDescent(; x=[100.0, 50.0], η=1e-1, ϵ=1e-6)  # Specify parameters for optimisation
+julia> a = GradientDescent(; x=[100.0, 50.0], η=1e-1, ϵ=1e-6, hooks=[h,])  # Specify parameters for optimisation
 ```
 
 Finally, you'll run `minimize!` or `minimize`.

@@ -4,18 +4,25 @@
 export GradientDescent, x, x!, η, ϵ
 
 """
-    GradientDescent{T<:Real}(x::Vector{T}, η::T)
+    GradientDescent{
+        T<:Real,H<:Hook,V<:AbstractVector{T},S<:AbstractVecOrTuple{H}
+    } <: OptAlgorithm
 
 Specifies parameters for gradient descent learning.
 
-`η` is the learning rate/step size.
-`x` is the current best guess for the solution.
-`ϵ` is the tolerance.
+# Fields
+- `η::T` is the learning rate/step size.
+- `x::V` is the current best guess for the solution.
+- `ϵ::T` is the tolerance.
+- `hooks::S` are the hooks
 """
-Base.@kwdef struct GradientDescent{T<:Real,V<:AbstractVector{T}} <: OptAlgorithm
+Base.@kwdef struct GradientDescent{
+    T<:Real,H<:Hook,V<:AbstractVector{T},S<:AbstractVecOrTuple{H}
+} <: OptAlgorithm
     x::V
     η::T
     ϵ::T
+    hooks::S
 end
 
 """
