@@ -3,8 +3,6 @@
 
 export minimize, minimize!
 
-abstract type OptAlgorithm end
-
 """
     minimize(f::Function, a::OptAlgorithm)
 
@@ -12,6 +10,10 @@ Minimize `f` using `a`.
 
 This will generally be less performant than [`TheGraphOpt.minimize!`](@ref).
 However, there are cases in which this will be better, so we provide it as an option.
+
+!!! warning
+    If you don't provide any hook with the [`IsStoppingCondition`](@ref) trait,
+    this will loop forever.
 """
 minimize(f::Function, a::OptAlgorithm) = maybeminimize!(f, a, x)
 
@@ -23,6 +25,10 @@ Minimize `f` using `a`.
 Does in-place updates of `a.x`.
 This will generally be more performant than [`TheGraphOpt.minimize`](@ref).
 However, there are cases in which this will be worse, so we provide both.
+
+!!! warning
+    If you don't provide any hook with the [`IsStoppingCondition`](@ref) trait,
+    this will loop forever.
 """
 minimize!(f::Function, a::OptAlgorithm) = maybeminimize!(f, a, x!)
 
@@ -34,10 +40,14 @@ Minimize `f` using `a`, which calls `op` for updating `a.x`.
 This function *may* be in-place.
 Don't use it directly unless you know what you're doing.
 This function is unexported.
+
+!!! warning
+    If you don't provide any hook with the [`IsStoppingCondition`](@ref) trait,
+    this will loop forever.
 """
 function maybeminimize!(f::Function, a::OptAlgorithm, op::Function)
     z = x(a) .- 1
-    while norm(z - x(a)) > ϵ(a)
+    while !shouldstop(a.hooks, a; Base.@locals()...)
         a = op(a, z)
         z = iteration(f, a)
     end

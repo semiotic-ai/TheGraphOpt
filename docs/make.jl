@@ -14,7 +14,12 @@ makedocs(;
         edit_link="main",
         assets=String[],
     ),
-    pages=["Home" => "index.md", "Algorithms" => "algorithms.md"],
+    pages=[
+        "Home" => "index.md",
+        "Algorithms" => "algorithms.md",
+        "Hooks" => "hooks.md",
+        "API" => "api.md",
+    ],
 )
 
 deploydocs(; repo="github.com/semiotic-ai/TheGraphOpt.jl", devbranch="main")
