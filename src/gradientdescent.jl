@@ -49,34 +49,34 @@ function x!(g::GradientDescent, v)
 end
 """
     η(g::GradientDescent)
-    η(g::GradientDescent, v)
 
-The learning rate/step size. If using the setter, `v` is the new value.
-
-The setter is not in-place.
+The learning rate/step size.
 """
 η(g::GradientDescent) = g.η
-η(g::GradientDescent, v) = @set g.η = v
 """
     ϵ(g::GradientDescent)
-    ϵ(g::GradientDescent, v)
 
-The tolerance. If using the setter, `v` is the new value.
-
-The setter is not in-place.
+The tolerance.
 """
 ϵ(g::GradientDescent) = g.ϵ
-ϵ(g::GradientDescent, v) = @set g.ϵ = v
 
 """
-    iteration(f::Function, a::OptAlgorithm)
+    hooks(g::GradientDescent)
+    hooks(g::GradientDescent, v)
+
+The hooks used by the algorithm.
+"""
+hooks(g::GradientDescent) = g.hooks
+
+"""
+    iteration(f::Function, a::GradientDescent)
 
 One iteration of `a` on the function `f`.
 
 This function is unexported.
 """
-function iteration(f::Function, g::GradientDescent)
-    ∇f = first(Zygote.gradient(f, x(g)))
-    z = x(g) .- η(g) * ∇f
+function iteration(f::Function, a::GradientDescent)
+    ∇f = first(Zygote.gradient(f, x(a)))
+    z = x(a) .- η(a) * ∇f
     return z
 end

@@ -46,8 +46,8 @@ This function is unexported.
     this will loop forever.
 """
 function maybeminimize!(f::Function, a::OptAlgorithm, op::Function)
-    z = x(a) .- 1
-    while !shouldstop(a.hooks, a; Base.@locals()...)
+    z = iteration(f, a)
+    while !shouldstop(hooks(a), a; Base.@locals()...)
         a = op(a, z)
         z = iteration(f, a)
     end
