@@ -44,9 +44,8 @@ julia> TheGraphOpt.x(sol)
 ```
 
 
-## Algorithms
 
-### Gradient Descent
+## Gradient Descent
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Gradient_descent):
 
@@ -59,7 +58,7 @@ The update rule for gradient descent is ``x_{n+1}=x_n - η∇f(x_n)``.
 TheGraphOpt.GradientDescent
 ```
 
-### Projected Gradient Descent
+## Projected Gradient Descent
 
 Projected Gradient Descent is a more general gradient descent in a sense.
 Whereas gradient descent itself has no constraint, projected gradient descent allows
@@ -113,13 +112,11 @@ julia> TheGraphOpt.x(aopt)
  0.49999766159738035
 ```
 
-The PGD struct is documented by
-
 ```@docs
 TheGraphOpt.ProjectedGradientDescent
 ```
 
-And the projection functions we've already defined are
+### Predefined Projection Functions
 
 ```@docs
 TheGraphOpt.σsimplex
