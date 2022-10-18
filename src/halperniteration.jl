@@ -8,10 +8,6 @@ export HalpernIteration
 
 A hook for using [Halpern Iteration](https://projecteuclid.org/journals/bulletin-of-the-american-mathematical-society/volume-73/issue-6/Fixed-points-of-nonexpanding-maps/bams/1183529119.pdf).
 in which you should specify the `x₀` and `λ`.
-
-This is an implicitly regularised method.
-If you use an algorithm like gradient descent with halpern iteration, you'll converge to
-the solution with the minimum ``\ell2`` distance from `x₀`.
 """
 Base.@kwdef struct HalpernIteration{T<:Real,V<:AbstractVector{T},F<:Function} <: Hook
     x₀::V
