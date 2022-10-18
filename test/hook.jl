@@ -3,7 +3,16 @@
 
 @testset "hook" begin
     struct FakeOptAlg <: TheGraphOpt.OptAlgorithm end
+    struct FakeHook <: Hook end
     a = FakeOptAlg()
+
+    @testset "stoptrait" begin
+        h = FakeHook()
+        @test !stophook(h, a; Dict()...)
+
+        TheGraphOpt.StopTrait(::Type{FakeHook}) = IsStoppingCondition()
+        @test_throws Exception stophook(h, a; Dict()...)
+    end
 
     @testset "StopWhen" begin
         function counter(h, a)
@@ -17,5 +26,14 @@
         h = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
         i = counter((h,), a)
         @test i == 5
+    end
+
+    @testset "postiterationtrait" begin
+        h = FakeHook()
+        z = [1, 1]
+        @test postiterationhook(h, a, z; Dict()...) == z
+
+        TheGraphOpt.PostIterationTrait(::Type{FakeHook}) = RunAfterIteration()
+        @test_throws Exception postiterationhook(h, a, z; Dict()...)
     end
 end

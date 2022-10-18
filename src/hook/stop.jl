@@ -1,12 +1,39 @@
 # Copyright 2022-, Semiotic AI, Inc.
 # SPDX-License-Identifier: Apache-2.0
 
-export Hook, stophook, StopWhen, shouldstop
+export StopTrait, IsStoppingCondition, IsNotStoppingCondition
+export stophook, StopWhen, shouldstop
 
 """
-Abstract type for hooks.
+Abstract type for stopping conditions traits
 """
-abstract type Hook end
+abstract type StopTrait end
+
+"""
+Exhibited by hooks that are stopping conditions.
+
+Stopping condition hooks must emit a boolean value when [`TheGraphOpt.stophook`](@ref) is called.
+If multiple hooks meet `IsStoppingCondition` are instantiated at the same time, we assume that
+they are meant to be OR'ed, so if any of them is true, optimisation is finished.
+For more complex behaviour, consider defining a more complex function using a single
+[`StopWhen`](@ref).
+
+To set this trait for a hook, run
+```julia
+julia> StopTrait(::Type{MyHook}) = IsStoppingCondition()
+```
+"""
+struct IsStoppingCondition <: StopTrait end
+
+"""
+Exhibited by hooks that are not stopping conditions.
+
+This is the default case.
+You should not have to set it manually for any hooks.
+"""
+struct IsNotStoppingCondition <: StopTrait end
+
+StopTrait(::Type) = IsNotStoppingCondition()
 
 """
     shouldstop(hs::AbstractVecOrTuple{H}, a::OptAlgorithm; locals...)
@@ -24,9 +51,10 @@ function stophook(h::T, a::OptAlgorithm; locals...) where {T}
     return stophook(StopTrait(T), h, a; locals...)
 end
 """
-    stophook(h::::IsStoppingCondition, a::OptAlgorithm; locals...)
+    stophook(::IsStoppingCondition, h::Hook, a::OptAlgorithm; locals...)
 
-Raise an error if the hook is a stopping condition but has not implemented `stophook`.
+Raise an error if the hook is a stopping condition but has not implemented
+[`TheGraphOpt.stophook`](@ref).
 """
 function stophook(::IsStoppingCondition, h::Hook, a::OptAlgorithm; locals...)
     return error(
@@ -35,7 +63,7 @@ function stophook(::IsStoppingCondition, h::Hook, a::OptAlgorithm; locals...)
     )
 end
 """
-    stophook(h::::(!IsStoppingCondition), a::OptAlgorithm; locals...)
+    stophook(h::IsNotStoppingCondition, a::OptAlgorithm; locals...)
 
 If the hook isn't a stopping condition, it shouldn't be considered in the OR, so return false.
 """
@@ -57,8 +85,8 @@ end
 StopTrait(::Type{StopWhen}) = IsStoppingCondition()
 
 """
-    stophook(h::StopWhen, a::OptAlgorithm; locals...)
+    stophook(::IsStoppingCondition, h::StopWhen, a::OptAlgorithm; locals...)
 
 Call `h.f` on `a` and `;locals`.
 """
-stophook(h::StopWhen, a::OptAlgorithm; locals...) = h.f(a; locals...)
+stophook(::IsStoppingCondition, h::StopWhen, a::OptAlgorithm; locals...) = h.f(a; locals...)

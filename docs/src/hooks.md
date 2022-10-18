@@ -34,6 +34,23 @@ TheGraphOpt.IsNotStoppingCondition
 TheGraphOpt.stophook
 ```
 
+### PostIterationTrait
+
+This trait tells the code if it should execute the hook after it calls
+[`TheGraphOpt.iteration`](@ref).
+All hooks default to the [`TheGraphOpt.DontRunAfterIteration`](@ref) trait unless otherwise
+documented.
+Hooks with this positive variant of this trait [`TheGraphOpt.RunAfterIteration`](@ref) must
+return `z`, the output of `iteration`.
+Hooks with this trait must also implement [`TheGraphOpt.postiterationhook`](@ref).
+
+```@docs
+TheGraphOpt.PostIterationTrait
+TheGraphOpt.RunAfterIteration
+TheGraphOpt.DontRunAfterIteration
+TheGraphOpt.postiterationhook
+```
+
 ## Using Predefined Hooks
 
 Hooks always descend from the same abstract type.

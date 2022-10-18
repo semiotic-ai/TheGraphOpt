@@ -5,8 +5,8 @@ export ProjectedGradientDescent
 
 """
     ProjectedGradientDescent(;
-        x::AbstractVector{T}, η::T, ϵ::T, hooks::AbstractVecOrTuple{H}, t::F
-    ) where {T<:Real,H<:Hook,F<:Function}
+        x::AbstractVector{T}, η::T, ϵ::T, hooks::AbstractVecOrTuple{<:Hook}, t::F
+    ) where {T<:Real,F<:Function}
 
 Specifies parameters for [`TheGraphOpt.GradientDescent`](@ref) and the projection function `t`.
 
@@ -23,8 +23,8 @@ struct ProjectedGradientDescent{G<:GradientDescent,F<:Function} <: OptAlgorithm
     t::F
 
     function ProjectedGradientDescent(;
-        x::AbstractVector{T}, η::T, ϵ::T, hooks::AbstractVecOrTuple{H}, t::F
-    ) where {T<:Real,H<:Hook,F<:Function}
+        x::AbstractVector{T}, η::T, ϵ::T, hooks::AbstractVecOrTuple{<:Hook}, t::F
+    ) where {T<:Real,F<:Function}
         g = GradientDescent(; x=x, η=η, ϵ=ϵ, hooks=hooks)
         return new{typeof(g),F}(g, t)
     end

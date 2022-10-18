@@ -11,4 +11,5 @@ TheGraphOpt.hooks
 TheGraphOpt.maybeminimize!
 TheGraphOpt.shouldstop
 TheGraphOpt.iteration
+TheGraphOpt.postiteration
 ```

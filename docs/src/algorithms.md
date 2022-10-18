@@ -122,3 +122,63 @@ TheGraphOpt.ProjectedGradientDescent
 TheGraphOpt.σsimplex
 TheGraphOpt.gssp
 ```
+
+## Halpern Iteration
+
+[Halpern iteration](https://projecteuclid.org/journals/bulletin-of-the-american-mathematical-society/volume-73/issue-6/Fixed-points-of-nonexpanding-maps/bams/1183529119.pdf)
+is a method of anchoring an iterative optimisation algorithm to some anchor point ``x_0``.
+The general form of the algorithm is given by
+
+```math
+x_{k+1} = \lambda_{k+1}x_0 + (1 - \lambda_{k+1})T(x_k)
+```
+
+Here, ``T: \mathbb{R}^d \to \mathbb{R}^d`` is a non-expansive map
+(i.e., ``\forall x,y \in \mathbb{R}^d: ||T(x) - T(y)|| \leq ||x - y||``).
+``\lambda_k`` is a step size that must be chosen such that it satisfies the properties.
+
+```math
+\begin{align*}
+    \lim_{k\to\infty} \lambda_k &= 0 \\
+    \sum_{k=1}^\infty \lambda_k &= \infty \\
+    \sum_{k=1}^\infty |\lambda_{k+1} - \lambda_k| &< \infty \\
+\end{align*}
+```
+
+A reasonable first guess for ``\lambda_k`` might be ``\frac{1}{k}`` if you're unsure about
+what to pick.
+
+!!! note
+    In the formula for Halpern Iteration, we actually use ``k+1``. In our code, you should still define ``\lambda_k`` as we'll add the one for you.
+
+This is an implicitly regularised method.
+If you use an algorithm like gradient descent with Halpern Iteration, you'll converge to
+the solution with the minimum ``\ell2`` distance from `x₀`.
+
+Implementation-wise, we've actually defined Halpern Iteration using a [Hook](@ref hooks)
+that exhibits the [`TheGraphOpt.RunAfterIteration`](@ref) trait.
+To use this, you'll want to add this hook to an existing algorithm.
+For example,
+
+```julia
+julia> using LinearAlgebra
+julia> f(x) = sum(x.^2)
+julia> a = GradientDescent(;
+            x=[100.0, 50.0],
+            η=1e-1,
+            ϵ=1e-6,
+            hooks=[
+                StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a)),
+                HalpernIteration(; x₀=[10, 10], λ=k -> 1 / k),
+            ],
+        )
+julia> o = minimize!(f, a)
+julia> x(o)
+2-element Vector{Float64}:
+ 0.005945303210463734
+ 0.005945303210463734
+```
+
+```@docs
+TheGraphOpt.HalpernIteration
+```
