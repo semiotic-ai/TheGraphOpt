@@ -16,13 +16,13 @@ Else, optimisation will get stuck in an infinite loop.
 
 ```julia
 julia> using LinearAlgebra
-julia> h = StopWhen((a; locals...) -> norm(x(a) - locals[:z]) < ϵ(a))  # Stop when the residual is less than the tolerance
+julia> h = StopWhen((a; locals...) -> norm(x(a) - locals[:z]) < 1e-6)  # Stop when the residual is less than the tolerance
 ```
 
 Then, you want to choose the algorithm you want to use for minimisation and specify its parameters.
 
 ```julia
-julia> a = GradientDescent(; x=[100.0, 50.0], η=1e-1, ϵ=1e-6, hooks=[h,])  # Specify parameters for optimisation
+julia> a = GradientDescent(; x=[100.0, 50.0], η=1e-1, hooks=[h,])  # Specify parameters for optimisation
 ```
 
 Finally, you'll run `minimize!` or `minimize`.
@@ -101,8 +101,7 @@ julia> f(x) = sum(x.^2)
 julia> a = ProjectedGradientDescent(;
             x=[100.0, 50.0],
             η=1e-1,
-            ϵ=1e-6,
-            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a))],
+            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 1e-6)],
             t=unitsimplex,
         )
 julia> aopt = minimize(f, a)
@@ -166,9 +165,8 @@ julia> f(x) = sum(x.^2)
 julia> a = GradientDescent(;
             x=[100.0, 50.0],
             η=1e-1,
-            ϵ=1e-6,
             hooks=[
-                StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a)),
+                StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 1e-6),
                 HalpernIteration(; x₀=[10, 10], λ=k -> 1 / k),
             ],
         )

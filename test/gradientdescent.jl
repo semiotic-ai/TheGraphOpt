@@ -6,8 +6,7 @@
         return GradientDescent(;
             x=[100.0, 50.0],
             η=1e-1,
-            ϵ=1.0,
-            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a))],
+            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 1.0)],
         )
     end
     distfromzero(n) = norm([0.0, 0.0] - x(n))
@@ -22,8 +21,7 @@
         glarge = GradientDescent(;
             x=[100.0, 50.0],
             η=1e-1,
-            ϵ=2.0,
-            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a))],
+            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 2.0)],
         )
         gsmall = makegd()
         nlarge = minimize(f, glarge)
@@ -36,8 +34,7 @@
         glarge = GradientDescent(;
             x=[100.0, 50.0],
             η=1e-1,
-            ϵ=2.0,
-            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a))],
+            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 2.0)],
         )
         gsmall = makegd()
         nlarge = minimize!(f, glarge)

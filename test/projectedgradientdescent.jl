@@ -8,8 +8,7 @@
             return ProjectedGradientDescent(;
                 x=[100.0, 50.0],
                 η=1e-1,
-                ϵ=1.0,
-                hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a))],
+                hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 1.0)],
                 t=x -> x,
             )
         end
@@ -23,8 +22,7 @@
         a = ProjectedGradientDescent(;
             x=[100.0, 50.0],
             η=1e-1,
-            ϵ=1e-6,
-            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a))],
+            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 1e-6)],
             t=x -> σsimplex(x, 1),  # Project onto unit-simplex
         )
         res = minimize(f, a)
@@ -35,8 +33,7 @@
         a = ProjectedGradientDescent(;
             x=[100.0, 50.0],
             η=1e-1,
-            ϵ=1e-6,
-            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a))],
+            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 1e-6)],
             t=x -> σsimplex(x, 1),  # Project onto unit-simplex
         )
         res = minimize!(f, a)

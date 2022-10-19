@@ -13,9 +13,8 @@
     a = GradientDescent(;
         x=[100.0, 50.0],
         η=1e-1,
-        ϵ=2.0,
         hooks=[
-            StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a)),
+            StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 2.0),
             HalpernIteration(; x₀=[10, 10], λ=k -> 1 / k),
         ],
     )

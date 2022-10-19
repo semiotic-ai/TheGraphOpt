@@ -5,8 +5,9 @@ export ProjectedGradientDescent
 
 """
     ProjectedGradientDescent(;
-        x::AbstractVector{T}, η::T, ϵ::T, hooks::AbstractVecOrTuple{<:Hook}, t::F
+        x::AbstractVector{T}, η::T, hooks::AbstractVecOrTuple{<:Hook}, t::F
     ) where {T<:Real,F<:Function}
+    ProjectedGradientDescent(g::G, t::F) where {G<:GradientDescent,F<:Function}
 
 Specifies parameters for [`TheGraphOpt.GradientDescent`](@ref) and the projection function `t`.
 
@@ -15,7 +16,6 @@ Specifies parameters for [`TheGraphOpt.GradientDescent`](@ref) and the projectio
 # Forwarded Methods
 - [`TheGraphOpt.x`](@ref)
 - [`TheGraphOpt.η`](@ref)
-- [`TheGraphOpt.ϵ`](@ref)
 - [`TheGraphOpt.hooks`](@ref)
 """
 struct ProjectedGradientDescent{G<:GradientDescent,F<:Function} <: OptAlgorithm
@@ -23,9 +23,9 @@ struct ProjectedGradientDescent{G<:GradientDescent,F<:Function} <: OptAlgorithm
     t::F
 
     function ProjectedGradientDescent(;
-        x::AbstractVector{T}, η::T, ϵ::T, hooks::AbstractVecOrTuple{<:Hook}, t::F
+        x::AbstractVector{T}, η::T, hooks::AbstractVecOrTuple{<:Hook}, t::F
     ) where {T<:Real,F<:Function}
-        g = GradientDescent(; x=x, η=η, ϵ=ϵ, hooks=hooks)
+        g = GradientDescent(; x=x, η=η, hooks=hooks)
         return new{typeof(g),F}(g, t)
     end
     function ProjectedGradientDescent(g::G, t::F) where {G<:GradientDescent,F<:Function}
@@ -33,7 +33,7 @@ struct ProjectedGradientDescent{G<:GradientDescent,F<:Function} <: OptAlgorithm
     end
 end
 
-Lazy.@forward ProjectedGradientDescent.g x, η, ϵ, hooks
+Lazy.@forward ProjectedGradientDescent.g x, η, hooks
 
 """
     x(g::ProjectedGradientDescent)

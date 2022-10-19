@@ -14,8 +14,7 @@ julia> f(x) = sum(x .^ 2)  # Specify function to optimise as min f(x)
 julia> a = GradientDescent(;
             x=[100.0, 50.0],  # Specify parameters for optimisation
             η=1e-1,
-            ϵ=1e-6,
-            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < ϵ(a))],  # hook stops opt when residual is below ϵ.
+            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 1e-6)],  # hook stops opt when residual is below 1e-6.
         )
 julia> sol = minimize!(f, a)  # Optimise
 julia> @show TheGraphOpt.x(sol)  # Print out the optimal value
