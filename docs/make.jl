@@ -22,4 +22,6 @@ makedocs(;
     ],
 )
 
-deploydocs(; repo="github.com/semiotic-ai/TheGraphOpt.jl", devbranch="main")
+deploydocs(;
+    repo="github.com/semiotic-ai/TheGraphOpt.jl", devbranch="main", devurl="latest"
+)
