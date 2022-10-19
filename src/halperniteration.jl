@@ -13,6 +13,16 @@ Base.@kwdef struct HalpernIteration{T<:Real,V<:AbstractVector{T},F<:Function} <:
     x₀::V
     λ::F
 end
+
+"""
+Get the anchor of `h`.
+"""
+x₀(h::HalpernIteration) = h.x₀
+"""
+Get the λ of `h`.
+"""
+λ(h::HalpernIteration) = h.λ
+
 PostIterationTrait(::Type{<:HalpernIteration}) = RunAfterIteration()
 function postiterationhook(
     ::RunAfterIteration,
@@ -22,7 +32,7 @@ function postiterationhook(
     locals...,
 ) where {T<:Real}
     k = locals[:i]
-    λₖ = h.λ(k + 1)
-    z = λₖ * h.x₀ .+ (1 .- λₖ) * z
+    λₖ = λ(h)(k + 1)
+    z = λₖ * x₀(h) .+ (1 .- λₖ) * z
     return z
 end

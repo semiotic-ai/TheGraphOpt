@@ -23,6 +23,9 @@ julia> @show TheGraphOpt.x(sol)  # Print out the optimal value
  1.6909278549636878e-6
 ```
 
+!!! note
+    As a rule, we recommend you use an accessor function rather than accessing struct fields directly when using this package. That will lend itself to greater stability in case we change stuff internally. As an example, prefer to use `x(a)` as compared with `a.x`, where `a` is the `GradientDescent` struct used in the example before. Similarly, for setting, prefer `x(a, v)` to `a.x = v`. Not only does this pattern aid in stability, but also in functionality such as handling setting for immutable structs.
+
 ## Installation
 
 Make sure you've installed [Julia 1.8 or greater](https://julialang.org/).

@@ -85,8 +85,15 @@ end
 StopTrait(::Type{StopWhen}) = IsStoppingCondition()
 
 """
+Getter for the stop-function.
+"""
+f(h::StopWhen) = h.f
+
+"""
     stophook(::IsStoppingCondition, h::StopWhen, a::OptAlgorithm; locals...)
 
-Call `h.f` on `a` and `;locals`.
+Call the stop-function on `a` and `;locals`.
 """
-stophook(::IsStoppingCondition, h::StopWhen, a::OptAlgorithm; locals...) = h.f(a; locals...)
+function stophook(::IsStoppingCondition, h::StopWhen, a::OptAlgorithm; locals...)
+    return f(h)(a; locals...)
+end
